@@ -56,7 +56,7 @@ draw :: proc(app: ^App) -> runtime.Allocator_Error {
 	return .None
 }
 
-count_neighbors :: proc(main_grid: ^[GRID_SIZE]Cell_State, x: int, y: int) -> int {
+count_neighbors :: proc "contextless" (main_grid: ^[GRID_SIZE]Cell_State, x: int, y: int) -> int {
 	count := 0
 
 	for dy := -1; dy <= 1; dy += 1 {
@@ -82,7 +82,7 @@ count_neighbors :: proc(main_grid: ^[GRID_SIZE]Cell_State, x: int, y: int) -> in
 	return count
 }
 
-update :: proc(app: ^App) {
+update :: proc "contextless" (app: ^App) {
 	for y in 0 ..< GRID_Y {
 		for x in 0 ..< GRID_X {
 			neighbors := count_neighbors(&app.main_grid, x, y)
@@ -128,9 +128,8 @@ run :: proc(app: ^App) -> runtime.Allocator_Error {
 }
 
 main :: proc() {
-
 	app := App{}
 	if run(&app) != .None {
-		panic("failed to memory allocate")
+		panic("failed to allocate memory")
 	}
 }
